@@ -1,1 +1,39 @@
 ---
+- name: Ensure OpenVPN config directory exists
+  file:
+    path: "{{ openvpn_config_dir }}"
+    state: directory
+    owner: root
+    group: vyattacfg
+
+- name: Create OpenVPN credentials file
+  copy:
+    dest: "{{ openvpn_config_dir }}/nordvpnauth.txt"
+    content: |
+      {{ openvpn_username }}
+      {{ openvpn_password }}
+    owner: root
+    group: vyattacfg
+
+- name: Download OpenVPN config archive
+  unarchive:
+    src: https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
+    dest: "{{ openvpn_config_dir }}"
+    owner: root
+    group: vyattacfg
+    remote_src: yes
+  #when: false
+
+- name: Tweak OpenVPN authentication
+  lineinfile:
+    path: "{{ openvpn_config_path }}"
+    regexp: '^auth-user-pass'
+    insertafter: '^#auth-user-pass '
+    line: auth-user-pass {{ openvpn_config_dir }}/nordvpnauth.txt
+
+- name: Tweak OpenVPN routing
+  lineinfile:
+    path: "{{ openvpn_config_path }}"
+    regexp: '^route-nopull '
+    insertafter: '^auth-user-pass '
+    line: route-nopull

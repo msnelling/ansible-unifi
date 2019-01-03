@@ -1,3 +1,5 @@
 ---
 openvpn_network_ipv4: "{{ vault_openvpn_network_ipv4 }}"
 openvpn_server: "{{ vault_openvpn_server }}"
+openvpn_username: "{{ vault_openvpn_username }}"
+openvpn_password: "{{ vault_openvpn_password }}"
