@@ -1,0 +1,82 @@
+{
+  "firewall": {
+    "modify": {
+      "OPENVPN_ROUTE": {
+        "rule": {
+          "10": {
+            "protocol": "all",
+            "description": "OpenVPN traffic",
+            "modify": {
+              "table": "1"
+            },
+            "source": {
+              "address": "{{ openvpn_network_ipv4 }}"
+            },
+            "action": "modify"
+          }
+        }
+      }
+    },
+    "source-validation": "loose"
+  },
+  "interfaces": {
+    "ethernet": {
+      "eth1": {
+        "vif": {
+          "4": {
+            "firewall": {
+              "in": {
+                "modify": "OPENVPN_ROUTE"
+              }
+            }
+          }
+        }
+      }
+    },
+    "openvpn": {
+      "vtun0": {
+        "description": "NordVPN Tunnel",
+        "config-file": "{{ openvpn_config_path }}"
+      }
+    }
+  },
+  "protocols": {
+    "static": {
+      "table": {
+        "1": {
+          "route": {
+            "0.0.0.0/0": {
+              "blackhole": {
+                "distance": "100"
+              }
+            }
+          },
+          "interface-route": {
+            "0.0.0.0/0": {
+              "next-hop-interface": {
+                "vtun0": {
+                  "distance": "2"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "service": {
+    "nat": {
+      "rule": {
+        "5001": {
+          "protocol": "all",
+          "description": "MASQ OpenVPN users to vtun",
+          "outbound-interface": "vtun0",
+          "source": {
+            "address": "{{ openvpn_network_ipv4 }}"
+          },
+          "type": "masquerade"
+        }
+      }
+    }
+  }
+}

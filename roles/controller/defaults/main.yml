@@ -1,1 +1,6 @@
 ---
+openvpn_server: uk1.nordvpn.com
+openvpn_protocol: udp
+openvpn_config_dir: /config/openvpn
+openvpn_config_file: "ovpn_{{ openvpn_protocol }}/{{ openvpn_server }}.{{ openvpn_protocol }}.ovpn"
+openvpn_config_path: "{{ openvpn_config_dir }}/{{ openvpn_config_file }}"

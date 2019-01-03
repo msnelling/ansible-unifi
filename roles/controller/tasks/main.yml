@@ -1,1 +1,5 @@
 ---
+- name: Upload config.gateway.json template
+  template:
+    src: config.gateway.json.j2
+    dest: /srv/unifi/data/sites/default/config.gateway.json

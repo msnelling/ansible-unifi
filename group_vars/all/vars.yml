@@ -1,0 +1,3 @@
+---
+openvpn_network_ipv4: "{{ vault_openvpn_network_ipv4 }}"
+openvpn_server: "{{ vault_openvpn_server }}"
