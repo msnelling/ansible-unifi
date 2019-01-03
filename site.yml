@@ -1,0 +1,13 @@
+---
+- hosts: unifiusg
+  become: true
+  tasks:
+  - import_role:
+      name: usg
+    tags: [usg]
+
+- hosts: cloudkey
+  tasks:
+  - import_role:
+      name: controller
+    tags: [controller]
